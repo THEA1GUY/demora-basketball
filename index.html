@@ -117,6 +117,23 @@
   </div>
 </div>
 
+<!-- WORD CYCLE -->
+<section id="wordcycle">
+  <div class="container">
+    <div class="wc-wrap">
+      <span class="wc-prefix">Demora Basketball is</span>
+      <div class="wc-stage" aria-live="polite">
+        <span class="wc-word active">Relentless</span>
+        <span class="wc-word">Grassroots</span>
+        <span class="wc-word">Fearless</span>
+        <span class="wc-word">Elite</span>
+        <span class="wc-word">Unstoppable</span>
+        <span class="wc-word">Hungry</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- MEET THE COACH -->
 <section id="home-coach">
   <div class="container">
@@ -300,6 +317,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
   });
+
+  // word cycle
+  (function() {
+    const words = document.querySelectorAll('.wc-word');
+    if (!words.length) return;
+    let cur = 0;
+    setInterval(() => {
+      words[cur].classList.remove('active');
+      words[cur].classList.add('exit');
+      const prev = cur;
+      setTimeout(() => words[prev].classList.remove('exit'), 600);
+      cur = (cur + 1) % words.length;
+      words[cur].classList.add('active');
+    }, 2200);
+  })();
 
   // preloader sequence
   if (!seen) {

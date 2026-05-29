@@ -357,6 +357,36 @@ footer { background: var(--d1); border-top: 1px solid var(--border); }
   .strip-panel:last-child { border-bottom: none; }
 }
 
+/* ── WORD CYCLE ── */
+#wordcycle { padding: 72px 0; background: var(--black); overflow: hidden; }
+.wc-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0; text-align: center;
+}
+.wc-prefix {
+  font-family: var(--font-d); font-size: clamp(1.8rem, 4vw, 3.2rem);
+  letter-spacing: 0.04em; color: var(--text-2); line-height: 1;
+}
+.wc-stage {
+  position: relative; height: clamp(3.6rem, 9vw, 7rem);
+  width: 100%; display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.wc-word {
+  position: absolute;
+  font-family: var(--font-d); font-size: clamp(3.4rem, 9vw, 7rem);
+  letter-spacing: 0.02em; color: var(--orange); line-height: 1;
+  transform: translateY(110%); opacity: 0;
+  transition: transform 0.55s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease;
+  white-space: nowrap;
+}
+.wc-word.active  { transform: translateY(0);    opacity: 1; }
+.wc-word.exit    { transform: translateY(-110%); opacity: 0; }
+@media (max-width: 520px) {
+  #wordcycle { padding: 48px 0; }
+  .wc-stage { height: clamp(3rem, 14vw, 4.5rem); }
+}
+
 /* ── HOME COACH ── */
 #home-coach { padding: 64px 0; background: var(--dark-2); }
 .hcoach-grid { display: grid; grid-template-columns: 340px 1fr; gap: 52px; align-items: center; }
