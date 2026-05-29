@@ -126,7 +126,7 @@ button { font-family: var(--font-b); cursor: none; }
   height: 72px; display: flex; align-items: center; justify-content: space-between;
 }
 .logo { display: flex; align-items: center; font-family: var(--font-d); font-size: 1.65rem; line-height: 1; }
-.logo-img { height: 48px; width: auto; display: block; object-fit: contain; }
+.logo-img { height: 36px; width: auto; display: block; object-fit: contain; }
 .logo-o { color: var(--orange); }
 .logo-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.15); margin: 0 10px; }
 .logo-sub { font-family: var(--font-b); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; color: var(--text-3); }
@@ -357,6 +357,20 @@ footer { background: var(--d1); border-top: 1px solid var(--border); }
   .strip-div { display: none; }
   .strip-panel { padding: 20px 0; border-bottom: 1px solid var(--border); }
   .strip-panel:last-child { border-bottom: none; }
+}
+
+/* ── HOME COACH ── */
+#home-coach { padding: 100px 0; background: var(--dark-2); }
+.hcoach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.hcoach-img { position: relative; border-radius: var(--rl); overflow: hidden; aspect-ratio: 3/4; }
+.hcoach-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.hcoach-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(to top, rgba(8,8,15,0.9) 0%, transparent 100%); }
+.hcoach-role { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); }
+.hcoach-creds { display: flex; flex-direction: column; gap: 10px; }
+.hcoach-cred { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--text-2); }
+@media (max-width: 820px) {
+  .hcoach-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hcoach-img { aspect-ratio: 4/3; max-height: 340px; }
 }
 
 /* ── PORTALS / EXPLORE ── */

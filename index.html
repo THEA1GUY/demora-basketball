@@ -139,6 +139,35 @@
   </div>
 </div>
 
+<!-- MEET THE COACH -->
+<section id="home-coach">
+  <div class="container">
+    <div class="hcoach-grid">
+      <div class="hcoach-img reveal">
+        <img src="Demora.jpg" alt="Head Coach" loading="lazy" />
+        <div class="hcoach-label">
+          <span class="hcoach-role">Head Coach</span>
+        </div>
+      </div>
+      <div class="hcoach-body reveal" data-d="2">
+        <span class="tag" style="margin-bottom:18px">The Man Behind It</span>
+        <h2 class="title" style="font-size:clamp(2.4rem,5vw,4rem);margin-bottom:20px">MEET THE<br>COACH</h2>
+        <p style="color:var(--text-2);line-height:1.75;margin-bottom:16px">A visionary who built this programme with nothing but conviction and a basketball. Coach Demora identified a gap for grassroots talent and created a structure where young players are not just coached — they are developed as athletes and individuals.</p>
+        <p style="color:var(--text-2);line-height:1.75;margin-bottom:28px">His philosophy is simple: hold every player to the highest possible standard, and watch what they become.</p>
+        <div class="hcoach-creds">
+          <span class="hcoach-cred"><span class="cred-dot"></span>10+ Years Coaching Experience</span>
+          <span class="hcoach-cred"><span class="cred-dot"></span>Youth Development Specialist</span>
+          <span class="hcoach-cred"><span class="cred-dot"></span>Founder — Demora BC</span>
+        </div>
+        <a href="about.html" class="btn btn-ghost" style="margin-top:32px;display:inline-flex;align-items:center;gap:8px">
+          Our Story
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- EXPLORE -->
 <section id="portals">
   <div class="container">
@@ -236,36 +265,44 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="animations.js"></script>
 <script>
-async function loadStrip() {
+async function loadLiveData() {
   if (!window.db) return;
-  const { data: matches } = await window.db
-    .from('matches').select('status,home_score,away_score,match_date,location,opponent').order('match_date');
-  if (!matches) return;
+  const [{ data: players }, { data: matches }] = await Promise.all([
+    window.db.from('players').select('id').eq('is_active', true),
+    window.db.from('matches').select('status,home_score,away_score,match_date,location,opponent').order('match_date')
+  ]);
 
-  const next = matches.find(m => m.status === 'upcoming');
-  if (next) {
-    const d = new Date(next.match_date);
-    const dateStr = d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-    const timeStr = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-    document.getElementById('stripOpp').textContent    = `vs ${next.opponent || 'TBA'}`;
-    document.getElementById('stripDetail').innerHTML   = `${dateStr} &nbsp;&middot;&nbsp; ${timeStr} &nbsp;&middot;&nbsp; ${next.location || 'TBA'}`;
-  } else {
-    document.getElementById('stripOpp').textContent  = 'No upcoming matches';
-    document.getElementById('stripDetail').textContent = '';
+  // Update hero stat targets with real data before the counter animation fires
+  if (players) {
+    const el = document.querySelector('.hstat-n[data-t="6"]');
+    if (el) el.dataset.t = players.length;
   }
+  if (matches) {
+    const played = matches.filter(m => m.status === 'completed' && m.home_score !== null);
+    const wins   = played.filter(m => m.home_score > m.away_score);
+    const winRate = played.length ? Math.round((wins.length / played.length) * 100) : 0;
+    const el = document.querySelector('.hstat-n[data-t="75"]');
+    if (el) el.dataset.t = winRate;
 
-  const played = matches.filter(m => m.status === 'completed' && m.home_score !== null);
-  const wins   = played.filter(m => m.home_score > m.away_score);
-  const losses = played.filter(m => m.home_score < m.away_score);
-  const winRate = played.length ? Math.round((wins.length / played.length) * 100) : 0;
-  const avgMargin = played.length
-    ? Math.round(played.reduce((s, m) => s + (m.home_score - m.away_score), 0) / played.length)
-    : 0;
-
-  document.getElementById('stripWins').textContent    = wins.length;
-  document.getElementById('stripLosses').textContent  = losses.length;
-  document.getElementById('stripWinRate').textContent = `${winRate}%`;
-  document.getElementById('stripMargin').textContent  = avgMargin >= 0 ? `+${avgMargin}` : String(avgMargin);
+    // Match strip
+    const next = matches.find(m => m.status === 'upcoming');
+    if (next) {
+      const d = new Date(next.match_date);
+      const dateStr = d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+      const timeStr = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+      document.getElementById('stripOpp').textContent  = `vs ${next.opponent || 'TBA'}`;
+      document.getElementById('stripDetail').innerHTML = `${dateStr} &nbsp;&middot;&nbsp; ${timeStr} &nbsp;&middot;&nbsp; ${next.location || 'TBA'}`;
+    } else {
+      document.getElementById('stripOpp').textContent    = 'No upcoming matches';
+      document.getElementById('stripDetail').textContent = '';
+    }
+    const losses     = played.filter(m => m.home_score < m.away_score);
+    const avgMargin  = played.length ? Math.round(played.reduce((s,m) => s+(m.home_score-m.away_score),0)/played.length) : 0;
+    document.getElementById('stripWins').textContent    = wins.length;
+    document.getElementById('stripLosses').textContent  = losses.length;
+    document.getElementById('stripWinRate').textContent = `${winRate}%`;
+    document.getElementById('stripMargin').textContent  = avgMargin >= 0 ? `+${avgMargin}` : String(avgMargin);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -307,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     run(() => { const s = $('hScroll'); if (s) s.style.opacity = '1'; }, 1050);
   }
 
-  loadStrip();
+  loadLiveData();
 
   // magnetic buttons
   document.querySelectorAll('.btn-mag').forEach(btn => {
