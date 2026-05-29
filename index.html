@@ -52,33 +52,11 @@
 
   <div class="hero-content">
 
-    <div class="hero-ey-wrap" id="hEyWrap">
-      <span class="hero-ey-bar"></span>
-      <p class="hero-eyebrow">Grassroots Basketball &nbsp;&middot;&nbsp; Est. 2024</p>
-    </div>
-
     <h1 class="hero-heading">
       <span class="hl"><span class="hl-i" id="hL1">WHERE</span></span>
       <span class="hl"><span class="hl-i" id="hL2">TALENT IS</span></span>
       <span class="hl hl-stroke"><span class="hl-i" id="hL3">FORGED.</span></span>
     </h1>
-
-    <div class="hero-meta" id="hMeta">
-      <div class="hstat">
-        <span class="hstat-n" data-t="6">0</span>
-        <span class="hstat-l">Players</span>
-      </div>
-      <div class="hstat-sep"></div>
-      <div class="hstat">
-        <span class="hstat-n" data-t="75">0</span>
-        <span class="hstat-l">Win %</span>
-      </div>
-      <div class="hstat-sep"></div>
-      <div class="hstat">
-        <span class="hstat-n" data-t="2024">0</span>
-        <span class="hstat-l">Founded</span>
-      </div>
-    </div>
 
     <div class="hero-btns" id="hBtns">
       <a href="players.html" class="btn btn-primary btn-mag">Scout the Squad</a>
@@ -263,22 +241,12 @@
 <script>
 async function loadLiveData() {
   if (!window.db) return;
-  const [{ data: players }, { data: matches }] = await Promise.all([
-    window.db.from('players').select('id').eq('is_active', true),
-    window.db.from('matches').select('status,home_score,away_score,match_date,location,opponent').order('match_date')
-  ]);
-
-  // Update hero stat targets with real data before the counter animation fires
-  if (players) {
-    const el = document.querySelector('.hstat-n[data-t="6"]');
-    if (el) el.dataset.t = players.length;
-  }
+  const { data: matches } = await window.db
+    .from('matches').select('status,home_score,away_score,match_date,location,opponent').order('match_date');
   if (matches) {
     const played = matches.filter(m => m.status === 'completed' && m.home_score !== null);
     const wins   = played.filter(m => m.home_score > m.away_score);
     const winRate = played.length ? Math.round((wins.length / played.length) * 100) : 0;
-    const el = document.querySelector('.hstat-n[data-t="75"]');
-    if (el) el.dataset.t = winRate;
 
     // Match strip
     const next = matches.find(m => m.status === 'upcoming');
@@ -310,34 +278,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const $ = id => document.getElementById(id);
 
   function showHero() {
-    // eyebrow + bar
-    run(() => $('hEyWrap')?.classList.add('in'), 60);
-
     // heading lines, staggered mask reveal
     ['hL1','hL2','hL3'].forEach((id, i) =>
-      run(() => $(id)?.classList.add('in'), 220 + i * 150)
+      run(() => $(id)?.classList.add('in'), 120 + i * 160)
     );
 
-    // stat counters
-    run(() => {
-      $('hMeta')?.classList.add('in');
-      document.querySelectorAll('.hstat-n[data-t]').forEach(el => {
-        const target = +el.dataset.t;
-        const dur    = 1500;
-        const t0     = performance.now();
-        (function tick(now) {
-          const p = Math.min((now - t0) / dur, 1);
-          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
-          if (p < 1) requestAnimationFrame(tick);
-        })(t0);
-      });
-    }, 640);
-
     // buttons
-    run(() => $('hBtns')?.classList.add('in'), 820);
+    run(() => $('hBtns')?.classList.add('in'), 640);
 
     // scroll indicator
-    run(() => { const s = $('hScroll'); if (s) s.style.opacity = '1'; }, 1050);
+    run(() => { const s = $('hScroll'); if (s) s.style.opacity = '1'; }, 860);
   }
 
   loadLiveData();
