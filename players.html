@@ -248,11 +248,21 @@
         card.dataset.p = index;
         card.dataset.pos = posAbbrev;
 
+        // Gallery stack cards (behind main card, fan out on hover)
+        const galImgs = (player.gal || []).filter(u => u && u !== player.img).slice(0, 2);
+        const stackHTML = galImgs.map((url, si) => `
+          <div class="sqcard-stack sqcard-stack-${si}" aria-hidden="true">
+            <img src="${url}" alt="" loading="lazy" />
+          </div>`).join('');
+
         card.innerHTML = `
-      <img src="${player.img}" alt="${player.name}" loading="lazy" />
-      <div class="sqcard-overlay">
-        <div><span class="sqcard-pos">${posAbbrev}</span><span class="sqcard-name">${player.name}</span><span class="sqcard-num">${player.num}</span></div>
-        <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      ${stackHTML}
+      <div class="sqcard-face">
+        <img src="${player.img}" alt="${player.name}" loading="lazy" />
+        <div class="sqcard-overlay">
+          <div><span class="sqcard-pos">${posAbbrev}</span><span class="sqcard-name">${player.name}</span><span class="sqcard-num">${player.num}</span></div>
+          <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
       </div>
     `;
 
