@@ -126,7 +126,7 @@ button { font-family: var(--font-b); cursor: none; }
   height: 72px; display: flex; align-items: center; justify-content: space-between;
 }
 .logo { display: flex; align-items: center; font-family: var(--font-d); font-size: 1.65rem; line-height: 1; }
-.logo-img { height: 36px; width: auto; display: block; object-fit: contain; }
+.logo-img { height: 36px; width: auto; display: block; object-fit: contain; mix-blend-mode: screen; }
 .logo-o { color: var(--orange); }
 .logo-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.15); margin: 0 10px; }
 .logo-sub { font-family: var(--font-b); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; color: var(--text-3); }
@@ -360,17 +360,20 @@ footer { background: var(--d1); border-top: 1px solid var(--border); }
 }
 
 /* ── HOME COACH ── */
-#home-coach { padding: 100px 0; background: var(--dark-2); }
-.hcoach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-.hcoach-img { position: relative; border-radius: var(--rl); overflow: hidden; aspect-ratio: 3/4; }
+#home-coach { padding: 64px 0; background: var(--dark-2); }
+.hcoach-grid { display: grid; grid-template-columns: 340px 1fr; gap: 52px; align-items: center; }
+.hcoach-img { position: relative; border-radius: var(--rl); overflow: hidden; height: 400px; }
 .hcoach-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
-.hcoach-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(to top, rgba(8,8,15,0.9) 0%, transparent 100%); }
-.hcoach-role { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); }
-.hcoach-creds { display: flex; flex-direction: column; gap: 10px; }
-.hcoach-cred { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--text-2); }
+.hcoach-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(to top, rgba(8,8,15,0.92) 0%, transparent 100%); }
+.hcoach-role { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); }
+.hcoach-body h2, .hcoach-body.h2 { font-family: var(--font-d); font-size: clamp(2rem,4vw,3.2rem); line-height:1; margin-bottom: 16px; }
+.hcoach-body p { font-size: 0.84rem; color: var(--text-2); line-height: 1.72; margin-bottom: 20px; }
+.hcoach-creds { display: flex; flex-direction: column; gap: 8px; margin: 20px 0 24px; }
+.hcoach-cred { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--text-2); }
 @media (max-width: 820px) {
-  .hcoach-grid { grid-template-columns: 1fr; gap: 40px; }
-  .hcoach-img { aspect-ratio: 4/3; max-height: 340px; }
+  #home-coach { padding: 48px 0; }
+  .hcoach-grid { grid-template-columns: 1fr; gap: 28px; }
+  .hcoach-img { height: 260px; }
 }
 
 /* ── PORTALS / EXPLORE ── */
@@ -430,6 +433,8 @@ footer { background: var(--d1); border-top: 1px solid var(--border); }
 @media (max-width: 520px) {
   .portals-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 220px); }
   .pcrd:nth-child(1), .pcrd-full { grid-column: 1; }
+  #portals { padding: 56px 0; }
+  #portals .section-head { margin-bottom: 32px; }
 }
 
 /* ================================================================
