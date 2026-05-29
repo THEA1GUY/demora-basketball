@@ -128,6 +128,30 @@ function splitChars(el) {
   return el.querySelectorAll('.split-inner');
 }
 
+/* 3D SCROLL CARD — mirrors Aceternity ContainerScroll */
+function initScrollCards() {
+  const cards = document.querySelectorAll('[data-scroll-card]');
+  if (!cards.length) return;
+
+  function update() {
+    const vh = window.innerHeight;
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      // 0 = card top at bottom of screen, 1 = card top at top of screen
+      const raw = 1 - (rect.top / vh);
+      const p   = Math.min(Math.max(raw, 0), 1);
+      const rotX  = 18 * (1 - Math.min(p / 0.6, 1));   // fully flat by 60% through
+      const sc    = 1 + 0.06 * (1 - Math.min(p / 0.6, 1));
+      card.style.transform        = `perspective(1100px) rotateX(${rotX.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
+      card.style.transformOrigin  = 'center top';
+    });
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}
+
 /* AUTO-INIT */
 document.addEventListener('DOMContentLoaded', () => {
   initCursor();
@@ -135,4 +159,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTransition();
   initReveal();
   initCounters();
+  initScrollCards();
 });

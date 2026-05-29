@@ -317,11 +317,9 @@ footer { background: var(--d1); border-top: 1px solid var(--border); }
 .hero-scroll-line { width: 1px; height: 38px; background: linear-gradient(to bottom, var(--orange), transparent); }
 
 @media (max-width: 768px) {
-  .hero-heading { font-size: clamp(3.8rem, 15vw, 6rem); margin-bottom: 32px; }
-  .hero-meta { gap: 22px; margin-bottom: 28px; }
-  .hstat-n { font-size: 2rem; }
-  .hero-content { padding: 0 20px 64px; }
-  #hero { min-height: 100svh; height: 100svh; }
+  .hero-heading { font-size: clamp(3.4rem, 14vw, 5.5rem); margin-bottom: 32px; }
+  .hero-content { padding: 0 20px 52px; }
+  #hero { height: 75svh; min-height: 480px; }
   .hbg img { object-position: center center; animation: none; transform: scale(1); }
 }
 
