@@ -7,6 +7,159 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── BENTO GALLERY ── */
+    #media-section { padding: 60px 0 80px; }
+    #media-section .container { max-width: 1200px; }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 90px;
+      gap: 10px;
+    }
+
+    .bi {
+      position: relative; overflow: hidden;
+      border-radius: 14px; cursor: pointer;
+      background: var(--dark-3);
+    }
+    .bi img, .bi video {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform .55s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .bi:hover img, .bi:hover video { transform: scale(1.06); }
+
+    /* span variants */
+    .bi-1x4 { grid-column: span 1; grid-row: span 4; }
+    .bi-2x2 { grid-column: span 2; grid-row: span 2; }
+    .bi-1x2 { grid-column: span 1; grid-row: span 2; }
+
+    /* hover overlay */
+    .bi-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,15,0.88) 0%, rgba(8,8,15,0.2) 50%, transparent 100%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 14px 16px;
+      opacity: 0; transition: opacity .28s ease;
+    }
+    .bi:hover .bi-overlay { opacity: 1; }
+    .bi-title { font-weight: 600; font-size: .82rem; color: #fff; line-height: 1.2; }
+    .bi-desc  { font-size: .68rem; color: rgba(255,255,255,.65); margin-top: 2px; }
+
+    /* video play icon */
+    .bi-play {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      background: rgba(8,8,15,.32);
+      transition: background .25s;
+    }
+    .bi:hover .bi-play { background: rgba(8,8,15,.18); }
+    .bi-play-btn {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,.12); border: 2px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .25s, background .25s;
+      backdrop-filter: blur(6px);
+    }
+    .bi:hover .bi-play-btn { transform: scale(1.1); background: rgba(249,115,22,.72); border-color: var(--orange); }
+    .bi-play-btn svg { width: 18px; height: 18px; fill: #fff; margin-left: 2px; }
+    .bi-play-label { font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+
+    /* mobile */
+    @media (max-width: 720px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 100px; gap: 8px; }
+      .bi-1x4 { grid-column: span 1; grid-row: span 3; }
+      .bi-2x2 { grid-column: span 2; grid-row: span 2; }
+    }
+    @media (max-width: 420px) {
+      .bento-grid { grid-template-columns: 1fr; grid-auto-rows: 180px; }
+      .bi-1x4, .bi-2x2, .bi-1x2 { grid-column: span 1; grid-row: span 1; }
+      .bi-overlay { opacity: 1; }
+    }
+
+    /* ── BENTO LIGHTBOX ── */
+    .blb {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(8,8,15,.96); backdrop-filter: blur(14px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .blb.open { opacity: 1; pointer-events: all; }
+
+    .blb-media {
+      flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
+      padding: 60px 40px 20px;
+    }
+    .blb-media img, .blb-media video {
+      max-width: 90vw; max-height: 68vh;
+      border-radius: 16px; object-fit: contain;
+      box-shadow: 0 32px 80px rgba(0,0,0,.6);
+      transition: opacity .2s ease;
+    }
+    .blb-media video { width: 90vw; max-width: 1000px; }
+
+    .blb-cap {
+      font-size: .78rem; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: rgba(255,255,255,.55);
+      padding: 10px 0 16px; text-align: center;
+    }
+
+    /* close */
+    .blb-x {
+      position: absolute; top: 18px; right: 22px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background .2s;
+    }
+    .blb-x:hover { background: rgba(255,255,255,.18); }
+    .blb-x svg { width: 16px; height: 16px; }
+
+    /* nav arrows */
+    .blb-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background .2s;
+    }
+    .blb-nav:hover { background: rgba(249,115,22,.55); border-color: var(--orange); }
+    .blb-nav svg { width: 18px; height: 18px; }
+    .blb-prev { left: 18px; }
+    .blb-next { right: 18px; }
+    @media (max-width: 600px) { .blb-prev { left: 8px; } .blb-next { right: 8px; } }
+
+    /* dock */
+    .blb-dock {
+      width: 100%; padding: 14px 20px 20px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .blb-dock::-webkit-scrollbar { display: none; }
+
+    .blb-dock-item {
+      flex-shrink: 0;
+      width: 52px; height: 52px; border-radius: 10px;
+      overflow: hidden; cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color .22s, transform .22s, opacity .22s;
+      opacity: .45; transform: rotate(var(--r));
+    }
+    .blb-dock-item:nth-child(odd)  { --r: -6deg; }
+    .blb-dock-item:nth-child(even) { --r:  6deg; }
+    .blb-dock-item img, .blb-dock-item video {
+      width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+    }
+    .blb-dock-item:hover { opacity: .8; transform: rotate(0) scale(1.15) translateY(-6px); }
+    .blb-dock-item.active {
+      border-color: var(--orange);
+      opacity: 1; transform: rotate(0) scale(1.25) translateY(-10px);
+    }
+  </style>
 </head>
 <body>
 <div id="c-dot"></div><div id="c-ring"></div><div id="pt"></div>
@@ -25,6 +178,7 @@
     <a href="media.html">Media</a><a href="about.html">About</a><a href="contact.html">Contact</a>
   </div>
 </nav>
+
 <header class="ph">
   <div class="ph-img"><img src="team 3.jpg" alt="" /></div>
   <div class="ph-overlay"></div>
@@ -33,60 +187,53 @@
     <h1 class="title" id="pageH">MEDIA</h1>
   </div>
 </header>
+
 <section id="media-section">
   <div class="container">
-    <div class="gal-grid">
+    <div class="bento-grid" id="bentoGrid">
 
-      <div class="gitem lg reveal" data-src="Demora.jpg" data-cap="Game Day">
+      <div class="bi bi-1x4 reveal" data-index="0">
         <img src="Demora.jpg" alt="Game Day" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">Game Day</span>
+        <div class="bi-overlay"><span class="bi-title">Game Day</span><span class="bi-desc">Match day energy</span></div>
       </div>
 
-      <div class="gitem reveal" data-d="1" data-src="team 1.jpg" data-cap="Training">
+      <div class="bi bi-2x2 reveal" data-index="1">
         <img src="team 1.jpg" alt="Training" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">Training</span>
+        <div class="bi-overlay"><span class="bi-title">Training</span><span class="bi-desc">Putting in the work</span></div>
       </div>
 
-      <div class="gitem reveal" data-d="2" data-src="team 3.jpg" data-cap="Match Day">
+      <div class="bi bi-1x4 reveal" data-index="2">
         <img src="team 3.jpg" alt="Match Day" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">Match Day</span>
+        <div class="bi-overlay"><span class="bi-title">Match Day</span><span class="bi-desc">Ready for battle</span></div>
       </div>
 
-      <div class="gitem tl reveal" data-d="1" data-src="team .jpg" data-cap="Court Session">
+      <div class="bi bi-2x2 reveal" data-index="3">
         <img src="team .jpg" alt="Court Session" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">Court Session</span>
+        <div class="bi-overlay"><span class="bi-title">Court Session</span><span class="bi-desc">Where reps are built</span></div>
       </div>
 
-      <div class="gitem reveal" data-d="2" data-src="team 4.jpg" data-cap="The Squad">
+      <div class="bi bi-1x4 reveal" data-index="4">
         <img src="team 4.jpg" alt="The Squad" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">The Squad</span>
+        <div class="bi-overlay"><span class="bi-title">The Squad</span><span class="bi-desc">Brotherhood on court</span></div>
       </div>
 
-      <div class="gitem reveal" data-d="3" data-src="team 5.jpg" data-cap="In Action">
+      <div class="bi bi-2x2 reveal" data-index="5">
         <img src="team 5.jpg" alt="In Action" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">In Action</span>
+        <div class="bi-overlay"><span class="bi-title">In Action</span><span class="bi-desc">Grassroots excellence</span></div>
       </div>
 
-      <div class="gitem reveal" data-d="2" data-src="Demora2.jpg" data-cap="Highlights">
+      <div class="bi bi-1x4 reveal" data-index="6">
         <img src="Demora2.jpg" alt="Highlights" loading="lazy" />
-        <div class="gitem-veil"><div class="zoom-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div></div>
-        <span class="gitem-cap">Highlights</span>
+        <div class="bi-overlay"><span class="bi-title">Highlights</span><span class="bi-desc">Moments that matter</span></div>
       </div>
 
-      <!-- VIDEO CARD -->
-      <div class="gitem vid-card reveal" data-d="3" id="vidCard">
-        <video id="thumbVid" muted loop preload="metadata">
+      <div class="bi bi-2x2 reveal" data-index="7" id="vidBentoCard">
+        <video id="bentoVid" muted loop preload="metadata" playsinline>
           <source src="video/Black_male_player_shoots_basketball_202605281533.mp4" type="video/mp4" />
         </video>
-        <div class="vid-play-layer">
-          <div class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-          <span class="vid-label">Watch Highlights</span>
+        <div class="bi-play" id="bentoPlayLayer">
+          <div class="bi-play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <span class="bi-play-label">Watch Highlights</span>
         </div>
       </div>
 
@@ -94,18 +241,24 @@
   </div>
 </section>
 
-<!-- LIGHTBOX -->
-<div class="lbox" id="lbox">
-  <div class="lbox-inner">
-    <button class="lbox-x" id="lboxX"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    <button class="lbox-nav lbox-p" id="lboxP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <img class="lbox-img" id="lboxImg" src="" alt="" />
-    <button class="lbox-nav lbox-n" id="lboxN"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
-    <p class="lbox-cap" id="lboxCap"></p>
-  </div>
+<!-- BENTO LIGHTBOX -->
+<div class="blb" id="blb">
+  <button class="blb-x" id="blbX">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <button class="blb-nav blb-prev" id="blbP">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="blb-nav blb-next" id="blbN">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+
+  <div class="blb-media" id="blbMedia"></div>
+  <p class="blb-cap" id="blbCap"></p>
+  <div class="blb-dock" id="blbDock"></div>
 </div>
 
-<!-- VIDEO MODAL -->
+<!-- VIDEO FULL MODAL -->
 <div class="vmod" id="vmod">
   <div class="vmod-inner">
     <button class="vmod-x" id="vmodX"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
@@ -121,42 +274,153 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="animations.js"></script>
 <script>
-/* Page title */
-document.addEventListener('DOMContentLoaded',()=>{
-  const h=document.getElementById('pageH');
-  if(h&&typeof splitChars!=='undefined'&&typeof gsap!=='undefined'){const ch=splitChars(h);gsap.set(ch,{y:'110%'});gsap.to(ch,{y:'0%',stagger:.04,duration:.9,ease:'expo.out',delay:.35});}
+/* Page title animation */
+document.addEventListener('DOMContentLoaded', () => {
+  const h = document.getElementById('pageH');
+  if (h && typeof splitChars !== 'undefined' && typeof gsap !== 'undefined') {
+    const ch = splitChars(h);
+    gsap.set(ch, { y: '110%' });
+    gsap.to(ch, { y: '0%', stagger: .04, duration: .9, ease: 'expo.out', delay: .35 });
+  }
 });
 
-/* Lightbox */
-const photos=[...document.querySelectorAll('.gitem[data-src]')];
-const lbox=document.getElementById('lbox'),lboxImg=document.getElementById('lboxImg'),lboxCap=document.getElementById('lboxCap');
-let cur=0;
-function openLb(i){cur=i;lboxImg.src=photos[i].dataset.src;lboxCap.textContent=photos[i].dataset.cap||'';lbox.classList.add('open');document.body.style.overflow='hidden';}
-function closeLb(){lbox.classList.remove('open');document.body.style.overflow='';}
-function navLb(d){cur=(cur+d+photos.length)%photos.length;lboxImg.style.opacity='0';setTimeout(()=>{lboxImg.src=photos[cur].dataset.src;lboxCap.textContent=photos[cur].dataset.cap||'';lboxImg.style.opacity='1';},160);}
-lboxImg.style.transition='opacity .16s ease';
-photos.forEach((el,i)=>el.addEventListener('click',()=>openLb(i)));
-document.getElementById('lboxX').addEventListener('click',closeLb);
-document.getElementById('lboxP').addEventListener('click',()=>navLb(-1));
-document.getElementById('lboxN').addEventListener('click',()=>navLb(1));
-lbox.addEventListener('click',e=>{if(e.target===lbox)closeLb();});
+/* ── BENTO GALLERY ── */
+const MEDIA = [
+  { type:'image', src:'Demora.jpg',   title:'Game Day',      desc:'Match day energy' },
+  { type:'image', src:'team 1.jpg',   title:'Training',      desc:'Putting in the work' },
+  { type:'image', src:'team 3.jpg',   title:'Match Day',     desc:'Ready for battle' },
+  { type:'image', src:'team .jpg',    title:'Court Session',  desc:'Where reps are built' },
+  { type:'image', src:'team 4.jpg',   title:'The Squad',     desc:'Brotherhood on court' },
+  { type:'image', src:'team 5.jpg',   title:'In Action',     desc:'Grassroots excellence' },
+  { type:'image', src:'Demora2.jpg',  title:'Highlights',    desc:'Moments that matter' },
+  { type:'video', src:'video/Black_male_player_shoots_basketball_202605281533.mp4', title:'Highlights Reel', desc:'Watch the action' },
+];
 
-/* Video card */
-const vc=document.getElementById('vidCard'),tv=document.getElementById('thumbVid'),vm=document.getElementById('vmod'),vv=document.getElementById('vmodVid');
-if(vc&&tv){
-  vc.addEventListener('mouseenter',()=>{tv.currentTime=0;tv.play().catch(()=>{});});
-  vc.addEventListener('mouseleave',()=>{tv.pause();tv.currentTime=0;});
-  vc.addEventListener('click',()=>{vm.classList.add('open');document.body.style.overflow='hidden';vv.play().catch(()=>{});});
+let blbCur = 0;
+const blb     = document.getElementById('blb');
+const blbMed  = document.getElementById('blbMedia');
+const blbCap  = document.getElementById('blbCap');
+const blbDock = document.getElementById('blbDock');
+
+/* Build dock thumbnails */
+MEDIA.forEach((item, i) => {
+  const el = document.createElement('div');
+  el.className = 'blb-dock-item';
+  if (item.type === 'video') {
+    const v = document.createElement('video');
+    v.src = item.src; v.muted = true; v.preload = 'metadata';
+    el.appendChild(v);
+  } else {
+    const img = document.createElement('img');
+    img.src = item.src; img.alt = item.title; img.loading = 'lazy';
+    el.appendChild(img);
+  }
+  el.addEventListener('click', () => openBlb(i));
+  blbDock.appendChild(el);
+});
+
+function openBlb(i) {
+  blbCur = i;
+  renderBlb();
+  blb.classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
-function closeVm(){vm.classList.remove('open');document.body.style.overflow='';vv.pause();}
-document.getElementById('vmodX').addEventListener('click',closeVm);
-vm.addEventListener('click',e=>{if(e.target===vm)closeVm();});
+
+function closeBlb() {
+  blb.classList.remove('open');
+  document.body.style.overflow = '';
+  /* pause any playing video in lightbox */
+  const v = blbMed.querySelector('video');
+  if (v) { v.pause(); v.currentTime = 0; }
+}
+
+function renderBlb() {
+  const item = MEDIA[blbCur];
+
+  /* fade out, swap, fade in */
+  blbMed.style.opacity = '0';
+  setTimeout(() => {
+    blbMed.innerHTML = '';
+    if (item.type === 'video') {
+      const v = document.createElement('video');
+      v.src = item.src; v.controls = true; v.autoplay = true;
+      v.style.cssText = 'max-width:90vw;max-height:68vh;border-radius:16px;box-shadow:0 32px 80px rgba(0,0,0,.6);';
+      blbMed.appendChild(v);
+    } else {
+      const img = document.createElement('img');
+      img.src = item.src; img.alt = item.title;
+      img.style.cssText = 'max-width:90vw;max-height:68vh;border-radius:16px;object-fit:contain;box-shadow:0 32px 80px rgba(0,0,0,.6);';
+      blbMed.appendChild(img);
+    }
+    blbCap.textContent = item.title;
+    blbMed.style.opacity = '1';
+    blbMed.style.transition = 'opacity .22s ease';
+
+    /* update dock */
+    blbDock.querySelectorAll('.blb-dock-item').forEach((el, i) => {
+      el.classList.toggle('active', i === blbCur);
+    });
+    /* scroll active dock item into view */
+    const active = blbDock.children[blbCur];
+    if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }, 150);
+}
+
+function navBlb(d) {
+  blbCur = (blbCur + d + MEDIA.length) % MEDIA.length;
+  renderBlb();
+}
+
+/* Attach click to bento items */
+document.querySelectorAll('.bi').forEach(el => {
+  const idx = +el.dataset.index;
+  if (el.id === 'vidBentoCard') return; /* video has its own handler */
+  el.addEventListener('click', () => openBlb(idx));
+});
+
+document.getElementById('blbX').addEventListener('click', closeBlb);
+document.getElementById('blbP').addEventListener('click', () => navBlb(-1));
+document.getElementById('blbN').addEventListener('click', () => navBlb(1));
+blb.addEventListener('click', e => { if (e.target === blb) closeBlb(); });
 
 /* Keyboard */
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeLb();closeVm();}
-  if(lbox.classList.contains('open')){if(e.key==='ArrowLeft')navLb(-1);if(e.key==='ArrowRight')navLb(1);}
+document.addEventListener('keydown', e => {
+  if (!blb.classList.contains('open')) return;
+  if (e.key === 'Escape')     closeBlb();
+  if (e.key === 'ArrowLeft')  navBlb(-1);
+  if (e.key === 'ArrowRight') navBlb(1);
 });
+
+/* Video card — hover preview, click → full modal */
+const vidCard = document.getElementById('vidBentoCard');
+const bentoVid = document.getElementById('bentoVid');
+const vmod = document.getElementById('vmod');
+const vmodVid = document.getElementById('vmodVid');
+
+if (vidCard && bentoVid) {
+  /* IntersectionObserver to auto-play muted preview when in view */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) bentoVid.play().catch(() => {});
+      else { bentoVid.pause(); bentoVid.currentTime = 0; }
+    });
+  }, { threshold: 0.3 });
+  io.observe(bentoVid);
+
+  vidCard.addEventListener('click', () => {
+    vmod.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    vmodVid.play().catch(() => {});
+  });
+}
+
+function closeVmod() {
+  vmod.classList.remove('open');
+  document.body.style.overflow = '';
+  vmodVid.pause();
+}
+document.getElementById('vmodX').addEventListener('click', closeVmod);
+vmod.addEventListener('click', e => { if (e.target === vmod) closeVmod(); });
 </script>
 </body>
 </html>
