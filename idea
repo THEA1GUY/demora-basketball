@@ -1,0 +1,31 @@
+# Basketball Website Project Ideas (Grassroots Team)
+
+## Core Philosophy
+* **Visual Beauty & Usability**: Sleek, modern, and highly interactive user experience. Designed to showcase the team premium-style despite being grassroots.
+* **Scouting & Showcasing**: Designed as a hub to read about the team and scout individual player talents.
+
+## Hosting
+* Site to be hosted on Netlify and Vercel.
+
+## Main Website Features
+* **News & Matches**: Show news on upcoming matches, last matches, and current matches.
+* **Team Media**: A dedicated section to post team videos (game highlights, training sessions, etc.).
+* **Player Section**:
+  * Visual layout like Pinterest (asymmetrical/masonry grid) showcasing photos of different players.
+  * Clicking a player card pops up a detailed player profile containing:
+    * Stats & playing style.
+    * A gallery of additional photos and highlight videos for that specific player (useful for scouting).
+* **About Section**: Profile and story of the coach and the team's grassroots journey.
+* **Contact/Socials**:
+  * "How to find us" / training locations.
+  * Links to social media accounts.
+
+## Database & Backend
+* **Database**: Supabase.
+
+## Admin Panel
+* **Structure**: A completely separate website sharing the same database.
+* **Features**:
+  * Manage player profiles, stats, matches, and media (photos/videos) without direct database interaction.
+  * Track monthly payment status of members/players.
+  * Manage player cards.

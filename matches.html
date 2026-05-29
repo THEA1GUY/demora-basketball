@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matches — Demora Basketball</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="c-dot"></div>
+  <div id="c-ring"></div>
+  <div id="pt"></div>
+  <nav id="nav">
+    <div class="nav-row">
+      <a href="index.html" class="logo"><span class="logo-o">D</span>EMORA<span class="logo-sep"></span><span
+          class="logo-sub">Basketball</span></a>
+      <ul class="nav-links">
+        <li><a href="players.html">Squad</a></li>
+        <li><a href="matches.html">Matches</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="ham" id="ham"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mob-menu" id="mob">
+      <a href="players.html">Squad</a><a href="matches.html">Matches</a>
+      <a href="media.html">Media</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+    </div>
+  </nav>
+  <header class="ph">
+    <div class="ph-img"><img src="Demora.jpg" alt="" /></div>
+    <div class="ph-overlay"></div>
+    <div class="ph-content container">
+      <span class="tag">Schedule &amp; Results</span>
+      <h1 class="title" id="pageH">MATCHES</h1>
+    </div>
+  </header>
+  <section id="matches-section">
+    <div class="container">
+      <div class="matches-wrap">
+        <!-- Loading state -->
+        <div class="loading-state" id="matches-loading">
+          <div class="loading-spinner"></div>
+          <p>Loading matches...</p>
+        </div>
+        <!-- Error state -->
+        <div class="error-state" id="matches-error" style="display: none;">
+          <div class="error-icon">⚠️</div>
+          <p>Failed to load matches. Please try again later.</p>
+          <button class="retry-btn" onclick="fetchMatches()">Retry</button>
+        </div>
+        <div>
+          <div class="match-card reveal">
+            <div class="match-status ms-up"><span class="ms-dot"></span>Upcoming</div>
+            <div class="match-date"><span class="md-day">14</span><span class="md-mo">Jun 2026</span></div>
+            <div class="match-teams">
+              <div class="team">
+                <div class="team-badge"><img src="Demora.jpg" alt="Demora" /></div><span>Demora</span>
+              </div>
+              <span class="vs">VS</span>
+              <div class="team">
+                <div class="team-ph">TBA</div><span>TBA</span>
+              </div>
+            </div>
+            <div class="match-meta">
+              <span class="mm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>4:00 PM</span>
+              <span class="mm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                  <circle cx="12" cy="9" r="2.5" />
+                </svg>Home Ground</span>
+            </div>
+          </div>
+          <div class="match-card reveal" data-d="1">
+            <div class="match-status ms-done"><span class="ms-dot"></span>Final</div>
+            <div class="match-date"><span class="md-day">02</span><span class="md-mo">May 2026</span></div>
+            <div class="match-teams">
+              <div class="team">
+                <div class="team-badge"><img src="Demora.jpg" alt="Demora" /></div><span>Demora</span>
+              </div>
+              <div class="vs-score"><span class="sc-w">72</span><span class="sc-sep">&mdash;</span><span
+                  class="sc-l">58</span></div>
+              <div class="team">
+                <div class="team-ph">R</div><span>Rivals FC</span>
+              </div>
+            </div>
+            <span class="result-badge rb-w">Victory</span>
+          </div>
+          <div class="match-card reveal" data-d="2">
+            <div class="match-status ms-done"><span class="ms-dot"></span>Final</div>
+            <div class="match-date"><span class="md-day">18</span><span class="md-mo">Apr 2026</span></div>
+            <div class="match-teams">
+              <div class="team">
+                <div class="team-badge"><img src="Demora.jpg" alt="Demora" /></div><span>Demora</span>
+              </div>
+              <div class="vs-score"><span class="sc-w">65</span><span class="sc-sep">&mdash;</span><span
+                  class="sc-l">61</span></div>
+              <div class="team">
+                <div class="team-ph">N</div><span>Northern BC</span>
+              </div>
+            </div>
+            <span class="result-badge rb-w">Victory</span>
+          </div>
+          <div class="match-card reveal" data-d="3">
+            <div class="match-status ms-done"><span class="ms-dot"></span>Final</div>
+            <div class="match-date"><span class="md-day">29</span><span class="md-mo">Mar 2026</span></div>
+            <div class="match-teams">
+              <div class="team">
+                <div class="team-badge"><img src="Demora.jpg" alt="Demora" /></div><span>Demora</span>
+              </div>
+              <div class="vs-score"><span class="sc-w">81</span><span class="sc-sep">&mdash;</span><span
+                  class="sc-l">67</span></div>
+              <div class="team">
+                <div class="team-ph">C</div><span>City Ballers</span>
+              </div>
+            </div>
+            <span class="result-badge rb-w">Victory</span>
+          </div>
+          <div class="match-card reveal" data-d="4">
+            <div class="match-status ms-done"><span class="ms-dot"></span>Final</div>
+            <div class="match-date"><span class="md-day">05</span><span class="md-mo">Apr 2026</span></div>
+            <div class="match-teams">
+              <div class="team">
+                <div class="team-badge"><img src="Demora.jpg" alt="Demora" /></div><span>Demora</span>
+              </div>
+              <div class="vs-score"><span class="sc-l">54</span><span class="sc-sep">&mdash;</span><span
+                  class="sc-w">60</span></div>
+              <div class="team">
+                <div class="team-ph">E</div><span>East United</span>
+              </div>
+            </div>
+            <span class="result-badge rb-l">Defeat</span>
+          </div>
+        </div>
+        <div class="stats-panel reveal" data-d="1" id="stats-panel">
+          <p class="sp-title">2026 Season</p>
+          <div class="sp-row">
+            <div class="sp-top"><span class="sp-num" data-count="12">0</span><span class="sp-label">Games Played</span>
+            </div>
+            <div class="sp-bar">
+              <div class="sp-fill" data-w="100"></div>
+            </div>
+          </div>
+          <div class="sp-row">
+            <div class="sp-top"><span class="sp-num" data-count="9">0</span><span class="sp-label">Wins</span></div>
+            <div class="sp-bar">
+              <div class="sp-fill" data-w="75"></div>
+            </div>
+          </div>
+          <div class="sp-row">
+            <div class="sp-top"><span class="sp-num" data-count="3">0</span><span class="sp-label">Losses</span></div>
+            <div class="sp-bar">
+              <div class="sp-fill alt" data-w="25"></div>
+            </div>
+          </div>
+          <div class="sp-row">
+            <div class="sp-top"><span class="sp-num" data-count="75">0<small>%</small></span><span class="sp-label">Win
+                Rate</span></div>
+            <div class="sp-bar">
+              <div class="sp-fill" data-w="75"></div>
+            </div>
+          </div>
+          <div class="sp-div"></div>
+          <div class="sp-record">
+            <div class="sp-rec-item"><span class="sp-rec-val rv-w">9</span><span class="sp-rec-label">W</span></div>
+            <div class="sp-rec-item"><span class="sp-rec-val rv-l">3</span><span class="sp-rec-label">L</span></div>
+            <div class="sp-rec-item"><span class="sp-rec-val rv-d">+14</span><span
+                class="sp-rec-label">Avg&nbsp;Margin</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="foot">
+      <div class="foot-top"><a href="index.html" class="logo"><span class="logo-o">D</span>EMORA<span
+            class="logo-sep"></span><span class="logo-sub">Basketball</span></a>
+        <p class="foot-tagline">Where talent is forged, not given.</p>
+      </div>
+      <div class="foot-bottom">
+        <p class="foot-copy">&copy; 2026 Demora Basketball.</p>
+        <nav class="foot-links"><a href="players.html">Squad</a><a href="media.html">Media</a><a
+            href="about.html">About</a><a href="contact.html">Contact</a></nav>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="storage.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="animations.js"></script>
+  <script>
+    // Fetch matches from Supabase
+    let matches = [];
+
+    async function fetchMatches() {
+      // Show loading state
+      const loadingEl = document.getElementById('matches-loading');
+      const errorEl = document.getElementById('matches-error');
+
+      loadingEl.style.display = 'block';
+      errorEl.style.display = 'none';
+
+      try {
+        if (!window.db) {
+          throw new Error('Supabase client not initialized');
+        }
+
+        const { data, error } = await window.db
+          .from('matches')
+          .select('*')
+          .order('match_date', { ascending: false });
+
+        if (error) {
+          throw error;
+        }
+
+        matches = data;
+        loadingEl.style.display = 'none';
+        renderMatches();
+        updateStats();
+
+      } catch (err) {
+        console.error('Error in fetchMatches:', err);
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    function renderMatches() {
+      const matchesWrap = document.querySelector('.matches-wrap');
+      if (!matchesWrap) return;
+
+      // Clear existing matches except the stats panel
+      const existingCards = matchesWrap.querySelectorAll('.match-card');
+      existingCards.forEach(card => card.remove());
+
+      matches.forEach((match, index) => {
+        const matchCard = document.createElement('div');
+        matchCard.className = 'match-card reveal';
+        matchCard.dataset.d = index;
+
+        const statusClass = match.status === 'upcoming' ? 'ms-up' : 'ms-done';
+        const statusText = match.status === 'upcoming' ? 'Upcoming' : 'Final';
+
+        let result = null;
+        if (match.status === 'completed' && match.home_score !== null && match.away_score !== null) {
+          result = match.home_score > match.away_score ? 'win' : 'loss';
+        }
+        const resultBadge = result === 'win' ? '<span class="result-badge rb-w">Victory</span>' :
+          result === 'loss' ? '<span class="result-badge rb-l">Defeat</span>' : '';
+
+        const date = new Date(match.match_date);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+
+        const opponentInitial = match.opponent ? match.opponent[0].toUpperCase() : '?';
+
+        const isWin = result === 'win';
+        const hasScore = match.home_score !== null && match.away_score !== null;
+        const homeClass = hasScore ? (isWin ? 'sc-w' : 'sc-l') : '';
+        const awayClass = hasScore ? (isWin ? 'sc-l' : 'sc-w') : '';
+        const highlightsLink = match.highlights_url
+          ? `<a class="match-highlights" href="${match.highlights_url}" target="_blank" rel="noopener">Watch Highlights ▶</a>`
+          : '';
+
+        matchCard.innerHTML = `
+          <div class="match-status ${statusClass}"><span class="ms-dot"></span>${statusText}</div>
+          <div class="match-date"><span class="md-day">${day}</span><span class="md-mo">${month} ${year}</span></div>
+          <div class="match-teams">
+            <div class="team"><div class="team-badge"><img src="Demora.jpg" alt="Demora" /></div><span>Demora</span></div>
+            ${hasScore ?
+            `<div class="vs-score"><span class="${homeClass}">${match.home_score}</span><span class="sc-sep">&mdash;</span><span class="${awayClass}">${match.away_score}</span></div>` :
+            '<span class="vs">VS</span>'}
+            <div class="team"><div class="team-ph">${opponentInitial}</div><span>${match.opponent || 'TBA'}</span></div>
+          </div>
+          ${resultBadge}
+          ${highlightsLink}
+        `;
+
+        matchesWrap.insertBefore(matchCard, matchesWrap.querySelector('.stats-panel'));
+      });
+    }
+
+    function updateStats() {
+      const played = matches.filter(m => m.status === 'completed');
+      const totalGames = played.length;
+      const wins = played.filter(m => m.home_score !== null && m.home_score > m.away_score).length;
+      const losses = played.filter(m => m.home_score !== null && m.home_score < m.away_score).length;
+      const winRate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
+
+      // Update stats panel
+      const gamesPlayed = document.querySelector('[data-count="12"]');
+      const winsCount = document.querySelector('[data-count="9"]');
+      const lossesCount = document.querySelector('[data-count="3"]');
+      const winRateElement = document.querySelector('[data-count="75"]');
+
+      if (gamesPlayed) gamesPlayed.textContent = totalGames;
+      if (winsCount) winsCount.textContent = wins;
+      if (lossesCount) lossesCount.textContent = losses;
+      if (winRateElement) winRateElement.innerHTML = `${winRate}<small>%</small>`;
+
+      // Update record
+      const winRecord = document.querySelector('.rv-w');
+      const lossRecord = document.querySelector('.rv-l');
+      if (winRecord) winRecord.textContent = wins;
+      if (lossRecord) lossRecord.textContent = losses;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Remove data-count so animations.js initCounters() doesn't animate stale hardcoded values
+      // updateStats() will write real values after the fetch resolves
+      document.querySelectorAll('#stats-panel [data-count]').forEach(el => el.removeAttribute('data-count'));
+
+      fetchMatches();
+
+      const h = document.getElementById('pageH');
+      if (h && typeof splitChars !== 'undefined' && typeof gsap !== 'undefined') {
+        const ch = splitChars(h);
+        gsap.set(ch, { y: '110%' });
+        gsap.to(ch, { y: '0%', stagger: .04, duration: .9, ease: 'expo.out', delay: .35 });
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storage Integration Test - Demora Basketball</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-header h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .test-header p {
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .test-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn.primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .test-btn.primary:hover {
+            background: #3182ce;
+        }
+
+        .test-btn.secondary {
+            background: #ed8936;
+            color: white;
+        }
+
+        .test-btn.secondary:hover {
+            background: #dd6b20;
+        }
+
+        .test-results {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .test-item.pass {
+            background: #f0fff4;
+            border-left-color: #48bb78;
+        }
+
+        .test-item.fail {
+            background: #fff5f5;
+            border-left-color: #f56565;
+        }
+
+        .test-item.pending {
+            background: #ebf8ff;
+            border-left-color: #4299e1;
+        }
+
+        .test-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .test-item.pass .test-status {
+            background: #48bb78;
+        }
+
+        .test-item.fail .test-status {
+            background: #f56565;
+        }
+
+        .test-item.pending .test-status {
+            background: #4299e1;
+        }
+
+        .test-info {
+            flex: 1;
+        }
+
+        .test-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .test-details {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .test-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #2d3748;
+            color: white;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .test-summary h3 {
+            margin: 0;
+        }
+
+        .test-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .test-stat {
+            text-align: center;
+        }
+
+        .test-stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .test-stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4299e1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🚀 Storage Integration Test</h1>
+            <p>Test the Supabase Storage integration for Demora Basketball</p>
+        </div>
+
+        <div class="test-controls">
+            <button class="test-btn primary" onclick="runTests()">Run Tests</button>
+            <button class="test-btn secondary" onclick="clearResults()">Clear Results</button>
+        </div>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Running tests...</p>
+        </div>
+
+        <div id="testResults" class="test-results hidden">
+            <!-- Test results will be populated here -->
+        </div>
+
+        <div id="testSummary" class="test-summary hidden">
+            <h3>Test Summary</h3>
+            <div class="test-stats">
+                <div class="test-stat">
+                    <div class="test-stat-number" id="passedCount">0</div>
+                    <div class="test-stat-label">Passed</div>
+                </div>
+                <div class="test-stat">
+                    <div class="test-stat-number" id="failedCount">0</div>
+                    <div class="test-stat-label">Failed</div>
+                </div>
+                <div class="test-stat">
+                    <div class="test-stat-number" id="totalCount">0</div>
+                    <div class="test-stat-label">Total</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include necessary scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase.js"></script>
+    <script src="../storage.js"></script>
+    <script src="../test-storage-integration.js"></script>
+
+    <script>
+        // Test interface functions
+        function runTests() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('testResults');
+            const summary = document.getElementById('testSummary');
+
+            loading.classList.remove('hidden');
+            results.classList.add('hidden');
+            summary.classList.add('hidden');
+
+            // Run tests after a short delay to ensure scripts are loaded
+            setTimeout(() => {
+                if (typeof runStorageTests === 'function') {
+                    runStorageTests().then(finalResults => {
+                        displayResults(finalResults);
+                        loading.classList.add('hidden');
+                        results.classList.remove('hidden');
+                        summary.classList.remove('hidden');
+                    }).catch(error => {
+                        console.error('Test execution error:', error);
+                        loading.classList.add('hidden');
+                        results.innerHTML = '<p class="test-item fail"><span class="test-status">❌</span><div class="test-info"><div class="test-name">Test Execution Error</div><div class="test-details">Failed to run tests: ' + error.message + '</div></div></p>';
+                        results.classList.remove('hidden');
+                        summary.classList.remove('hidden');
+                    });
+                } else {
+                    loading.classList.add('hidden');
+                    results.innerHTML = '<p class="test-item fail"><span class="test-status">❌</span><div class="test-info"><div class="test-name">Test Runner Error</div><div class="test-details">Test runner not available. Please check script loading.</div></div></p>';
+                    results.classList.remove('hidden');
+                    summary.classList.remove('hidden');
+                }
+            }, 2000);
+        }
+
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('testResults');
+            const passedCount = document.getElementById('passedCount');
+            const failedCount = document.getElementById('failedCount');
+            const totalCount = document.getElementById('totalCount');
+
+            resultsContainer.innerHTML = '';
+
+            results.details.forEach(test => {
+                const testItem = document.createElement('div');
+                testItem.className = `test-item ${test.passed ? 'pass' : 'fail'}`;
+
+                const statusIcon = test.passed ? '✅' : '❌';
+                const statusText = test.passed ? 'PASS' : 'FAIL';
+
+                testItem.innerHTML = `
+          <span class="test-status">${statusIcon}</span>
+          <div class="test-info">
+            <div class="test-name">${test.name}</div>
+            <div class="test-details">${test.details || statusText}</div>
+          </div>
+        `;
+
+                resultsContainer.appendChild(testItem);
+            });
+
+            passedCount.textContent = results.passed;
+            failedCount.textContent = results.failed;
+            totalCount.textContent = results.passed + results.failed;
+        }
+
+        function clearResults() {
+            const results = document.getElementById('testResults');
+            const summary = document.getElementById('testSummary');
+
+            results.classList.add('hidden');
+            summary.classList.add('hidden');
+        }
+
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                runTests();
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>

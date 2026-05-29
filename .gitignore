@@ -1,0 +1,10 @@
+# Supabase MCP config (contains personal access token)
+.mcp.json
+
+# Test files
+test-storage-integration.js
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

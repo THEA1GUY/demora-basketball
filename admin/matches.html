@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matches — Demora Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="admin-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="logo-mark"><span>D</span>EMORA</div><div class="logo-sub">Admin Panel</div></div>
+    <nav class="sidebar-nav">
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="players.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Players</a>
+      <a href="matches.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Matches</a>
+      <a href="payments.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</a>
+    </nav>
+    <div class="sidebar-footer"><button id="signOutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar"><span class="topbar-title">Matches</span></div>
+    <div class="content">
+      <div class="page-head">
+        <h1>Match Manager</h1>
+        <button class="btn btn-primary" id="addMatchBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Match
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Opponent</th><th>Location</th><th>Status</th><th>Score</th><th>Actions</th></tr></thead>
+          <tbody id="matchTbody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-bg" id="matchModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="matchModalTitle">Add Match</h2>
+      <button class="modal-x" onclick="closeModal('matchModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mId" />
+      <div class="fg"><label>Opponent *</label><input id="mOpp" type="text" placeholder="Rivals FC" /></div>
+      <div class="frow">
+        <div class="fg"><label>Date &amp; Time *</label><input id="mDate" type="datetime-local" /></div>
+        <div class="fg"><label>Location</label><input id="mLoc" type="text" placeholder="Home Ground" /></div>
+      </div>
+      <div class="fg"><label>Status</label><select id="mStatus"><option value="upcoming">Upcoming</option><option value="completed">Completed</option></select></div>
+      <div class="frow" id="scoreRow" style="display:none">
+        <div class="fg"><label>Demora Score</label><input id="mHome" type="number" placeholder="72" /></div>
+        <div class="fg"><label>Opponent Score</label><input id="mAway" type="number" placeholder="58" /></div>
+      </div>
+      <div class="fg"><label>Highlights Video URL</label><input id="mHighlights" type="text" placeholder="https://youtube.com/..." /></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('matchModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveMatchBtn">Save Match</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js"></script>
+<script>
+let matches = [];
+
+document.getElementById('mStatus').addEventListener('change', e => {
+  document.getElementById('scoreRow').style.display = e.target.value === 'completed' ? 'grid' : 'none';
+});
+
+async function loadMatches() {
+  const tbody = document.getElementById('matchTbody');
+  if (!db) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">Connect Supabase.</td></tr>'; return; }
+  const { data, error } = await db.from('matches').select('*').order('match_date', { ascending: false });
+  if (error) { toast(error.message,'error'); return; }
+  matches = data || [];
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('matchTbody');
+  if (!matches.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><h3>No matches yet</h3><p>Click "Add Match" to schedule one.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = matches.map(m => {
+    const win = m.status === 'completed' && m.home_score !== null && m.home_score > m.away_score;
+    const los = m.status === 'completed' && m.home_score !== null && m.home_score < m.away_score;
+    const score = m.status === 'completed' && m.home_score !== null ? `${m.home_score} — ${m.away_score}` : '—';
+    const result = win ? '<span class="badge badge-win">W</span>' : los ? '<span class="badge badge-loss">L</span>' : '';
+    return `<tr>
+      <td><span class="td-main">${fmtDate(m.match_date)}</span><br><span style="font-size:.76rem;color:var(--muted)">${fmtTime(m.match_date)}</span></td>
+      <td class="td-main">${m.opponent}</td>
+      <td>${m.location || '—'}</td>
+      <td><span class="badge ${m.status==='upcoming'?'badge-up':'badge-done'}">${m.status}</span></td>
+      <td>${score} ${result}</td>
+      <td><div class="actions">
+        <button class="act-btn" onclick="editMatch('${m.id}')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="act-btn del" onclick="deleteMatch('${m.id}')" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('addMatchBtn').addEventListener('click', () => {
+  ['mId','mOpp','mDate','mLoc','mHome','mAway','mHighlights'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('mStatus').value = 'upcoming';
+  document.getElementById('scoreRow').style.display = 'none';
+  document.getElementById('matchModalTitle').textContent = 'Add Match';
+  openModal('matchModal');
+});
+
+function editMatch(id) {
+  const m = matches.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('mId').value          = m.id;
+  document.getElementById('mOpp').value         = m.opponent;
+  document.getElementById('mDate').value        = m.match_date ? m.match_date.slice(0,16) : '';
+  document.getElementById('mLoc').value         = m.location ?? '';
+  document.getElementById('mStatus').value      = m.status;
+  document.getElementById('mHome').value        = m.home_score ?? '';
+  document.getElementById('mAway').value        = m.away_score ?? '';
+  document.getElementById('mHighlights').value  = m.highlights_url ?? '';
+  document.getElementById('scoreRow').style.display = m.status === 'completed' ? 'grid' : 'none';
+  document.getElementById('matchModalTitle').textContent = 'Edit Match';
+  openModal('matchModal');
+}
+
+async function deleteMatch(id) {
+  if (!confirmDelete('Delete this match?')) return;
+  const { error } = await db.from('matches').delete().eq('id', id);
+  if (error) { toast(error.message,'error'); return; }
+  toast('Match deleted.');
+  loadMatches();
+}
+
+document.getElementById('saveMatchBtn').addEventListener('click', async () => {
+  const id  = document.getElementById('mId').value;
+  const opp = document.getElementById('mOpp').value.trim();
+  const dt  = document.getElementById('mDate').value;
+  if (!opp || !dt) { toast('Opponent and date are required.','error'); return; }
+  const status = document.getElementById('mStatus').value;
+
+  const payload = {
+    opponent:       opp,
+    match_date:     new Date(dt).toISOString(),
+    location:       document.getElementById('mLoc').value.trim() || null,
+    status,
+    home_score:     status === 'completed' ? (parseInt(document.getElementById('mHome').value) ?? null) : null,
+    away_score:     status === 'completed' ? (parseInt(document.getElementById('mAway').value) ?? null) : null,
+    highlights_url: document.getElementById('mHighlights').value.trim() || null,
+  };
+
+  const btn = document.getElementById('saveMatchBtn');
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  const { error } = id
+    ? await db.from('matches').update(payload).eq('id', id)
+    : await db.from('matches').insert(payload);
+  btn.textContent = 'Save Match'; btn.disabled = false;
+  if (error) { toast(error.message,'error'); return; }
+  toast(id ? 'Match updated.' : 'Match added.');
+  closeModal('matchModal');
+  loadMatches();
+});
+
+document.addEventListener('DOMContentLoaded', async () => { await requireAuth(); loadMatches(); });
+</script>
+</body>
+</html>

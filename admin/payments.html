@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payments — Demora Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .month-nav { display:flex; align-items:center; gap:10px; }
+    .month-nav button { width:32px; height:32px; border-radius:50%; background:var(--dark-4); border:1px solid var(--border); color:var(--muted); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.18s; }
+    .month-nav button:hover { border-color:var(--orange); color:var(--orange); }
+    .month-nav button svg { width:14px; height:14px; }
+    .month-label { font-family:var(--ff-d); font-size:1.2rem; letter-spacing:.08em; min-width:130px; text-align:center; }
+    .pay-summary { display:flex; gap:16px; margin-top:14px; }
+    .ps-item { font-size:.78rem; color:var(--muted); }
+    .ps-item strong { color:var(--text); }
+    .ps-item.green strong { color:var(--green); }
+    .ps-item.red   strong { color:var(--red); }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="logo-mark"><span>D</span>EMORA</div><div class="logo-sub">Admin Panel</div></div>
+    <nav class="sidebar-nav">
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="players.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Players</a>
+      <a href="matches.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Matches</a>
+      <a href="payments.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payments</a>
+    </nav>
+    <div class="sidebar-footer"><button id="signOutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar"><span class="topbar-title">Payments</span></div>
+    <div class="content">
+
+      <div class="page-head">
+        <div>
+          <h1>Payment Tracker</h1>
+          <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Click any cell to toggle paid / unpaid status.</p>
+        </div>
+        <div class="month-nav">
+          <button id="prevMonth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <span class="month-label" id="monthLabel">—</span>
+          <button id="nextMonth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+
+      <div class="pay-summary">
+        <span class="ps-item green">Paid: <strong id="paidCount">—</strong></span>
+        <span class="ps-item red">Unpaid: <strong id="unpaidCount">—</strong></span>
+        <span class="ps-item">Total: <strong id="totalCount">—</strong></span>
+      </div>
+
+      <div style="margin-top:18px">
+        <div id="payGridWrap">
+          <p style="color:var(--muted);padding:32px 0;text-align:center">Loading...</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js"></script>
+<script>
+let players    = [];
+let payments   = {};   // key: `${playerId}_${monthISO}` → payment row
+let currentMonth; // Date object, always 1st of month
+
+function monthKey(d) { return d.toISOString().split('T')[0].slice(0,7) + '-01'; }
+
+function setMonth(d) {
+  currentMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+  document.getElementById('monthLabel').textContent = currentMonth.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  renderGrid();
+}
+
+document.getElementById('prevMonth').addEventListener('click', () => {
+  setMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+});
+document.getElementById('nextMonth').addEventListener('click', () => {
+  setMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+});
+
+async function loadData() {
+  if (!db) {
+    document.getElementById('payGridWrap').innerHTML = '<p style="color:var(--muted);padding:32px 0;text-align:center">Connect Supabase to track payments.</p>';
+    return;
+  }
+  const [{ data: pls }, { data: pays }] = await Promise.all([
+    db.from('players').select('id,name,position').eq('is_active',true).order('name'),
+    db.from('payments').select('*')
+  ]);
+  players = pls || [];
+  payments = {};
+  (pays || []).forEach(p => { payments[`${p.player_id}_${p.month}`] = p; });
+  renderGrid();
+}
+
+function renderGrid() {
+  const wrap  = document.getElementById('payGridWrap');
+  const mk    = monthKey(currentMonth);
+  const paid  = players.filter(p => payments[`${p.id}_${mk}`]?.paid).length;
+  const total = players.length;
+
+  document.getElementById('paidCount').textContent   = paid;
+  document.getElementById('unpaidCount').textContent  = total - paid;
+  document.getElementById('totalCount').textContent   = total;
+
+  if (!players.length) {
+    wrap.innerHTML = '<div class="empty"><h3>No active players</h3><p>Add players first.</p></div>';
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div class="pay-grid-wrap">
+      <table class="pay-grid">
+        <thead>
+          <tr>
+            <th class="player-col">Player</th>
+            <th>${currentMonth.toLocaleDateString('en-GB',{month:'short',year:'numeric'})}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${players.map(p => {
+            const pay = payments[`${p.id}_${mk}`];
+            const isPaid = pay?.paid || false;
+            return `<tr>
+              <td class="player-col">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="display:flex;flex-direction:column">
+                    <span style="font-weight:600;color:var(--text);font-size:.84rem">${p.name}</span>
+                    <span style="font-size:.68rem;color:var(--muted)">${p.position}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="pay-cell ${isPaid?'paid':'unpaid'}" data-player="${p.id}" data-month="${mk}" data-paid="${isPaid}">
+                  ${isPaid ? '&#10003; Paid' : 'Unpaid'}
+                </div>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  // toggle on click
+  wrap.querySelectorAll('.pay-cell').forEach(cell => {
+    cell.addEventListener('click', () => togglePayment(cell));
+  });
+}
+
+async function togglePayment(cell) {
+  const playerId = cell.dataset.player;
+  const month    = cell.dataset.month;
+  const isPaid   = cell.dataset.paid === 'true';
+  const newPaid  = !isPaid;
+  const key      = `${playerId}_${month}`;
+
+  cell.style.opacity = '.5';
+
+  const existing = payments[key];
+  let error;
+  if (existing) {
+    ({ error } = await db.from('payments').update({ paid: newPaid, paid_date: newPaid ? new Date().toISOString() : null }).eq('id', existing.id));
+    if (!error) payments[key] = { ...existing, paid: newPaid };
+  } else {
+    const { data, error: e } = await db.from('payments').insert({ player_id: playerId, month, paid: newPaid, paid_date: newPaid ? new Date().toISOString() : null }).select().single();
+    error = e;
+    if (!error) payments[key] = data;
+  }
+
+  cell.style.opacity = '1';
+  if (error) { toast(error.message,'error'); return; }
+
+  // update cell immediately
+  cell.dataset.paid = String(newPaid);
+  cell.className = `pay-cell ${newPaid?'paid':'unpaid'}`;
+  cell.innerHTML  = newPaid ? '&#10003; Paid' : 'Unpaid';
+
+  const mk    = monthKey(currentMonth);
+  const paid  = players.filter(p => payments[`${p.id}_${mk}`]?.paid).length;
+  document.getElementById('paidCount').textContent   = paid;
+  document.getElementById('unpaidCount').textContent  = players.length - paid;
+  toast(newPaid ? 'Marked as paid.' : 'Marked as unpaid.');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await requireAuth();
+  setMonth(new Date());
+  loadData();
+});
+</script>
+</body>
+</html>

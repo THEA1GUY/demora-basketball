@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Demora Basketball</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-box">
+    <div class="login-logo"><span>D</span>EMORA</div>
+    <p class="login-sub">Admin Panel &mdash; Sign in to continue</p>
+
+    <form id="loginForm">
+      <div class="fg">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="admin@demorabasketball.com" required />
+      </div>
+      <div class="fg">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:6px" id="loginBtn">
+        Sign In
+      </button>
+      <p class="login-err" id="loginErr"></p>
+    </form>
+
+    <p style="margin-top:20px;font-size:0.75rem;color:var(--muted);line-height:1.6">
+      <strong style="color:var(--dim)">First time setup:</strong><br>
+      Add your Supabase credentials to <code style="color:var(--orange)">admin.js</code>, then create an admin user in your Supabase dashboard under Authentication &rarr; Users.
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  // Already logged in? go to dashboard
+  if (db) {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) window.location.href = 'index.html';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('loginErr');
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+    err.textContent = '';
+
+    if (!db) {
+      err.textContent = 'Supabase not configured. Update admin.js with your credentials.';
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      return;
+    }
+
+    const { error } = await db.auth.signInWithPassword({ email, password });
+    if (error) {
+      err.textContent = error.message;
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+    } else {
+      window.location.href = 'index.html';
+    }
+  });
+});
+</script>
+</body>
+</html>

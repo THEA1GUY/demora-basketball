@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demora Basketball</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+<div id="pt"></div>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="pre-word"><span>D</span>EMORA</div>
+  <div class="pre-bar"><div class="pre-fill" id="preFill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-row">
+    <a href="index.html" class="logo">
+      <span class="logo-o">D</span>EMORA
+      <span class="logo-sep"></span>
+      <span class="logo-sub">Basketball</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="players.html">Squad</a></li>
+      <li><a href="matches.html">Matches</a></li>
+      <li><a href="media.html">Media</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="nav-cta">Contact</a></li>
+    </ul>
+    <button class="ham" id="ham"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mob-menu" id="mob">
+    <a href="players.html">Squad</a>
+    <a href="matches.html">Matches</a>
+    <a href="media.html">Media</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hbg">
+    <img src="court.png" alt="" aria-hidden="true">
+    <div class="hbg-veil"></div>
+    <div class="hbg-grain" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero-content">
+
+    <div class="hero-ey-wrap" id="hEyWrap">
+      <span class="hero-ey-bar"></span>
+      <p class="hero-eyebrow">Grassroots Basketball &nbsp;&middot;&nbsp; Est. 2024</p>
+    </div>
+
+    <h1 class="hero-heading">
+      <span class="hl"><span class="hl-i" id="hL1">WHERE</span></span>
+      <span class="hl"><span class="hl-i" id="hL2">TALENT IS</span></span>
+      <span class="hl hl-stroke"><span class="hl-i" id="hL3">FORGED.</span></span>
+    </h1>
+
+    <div class="hero-meta" id="hMeta">
+      <div class="hstat">
+        <span class="hstat-n" data-t="6">0</span>
+        <span class="hstat-l">Players</span>
+      </div>
+      <div class="hstat-sep"></div>
+      <div class="hstat">
+        <span class="hstat-n" data-t="75">0</span>
+        <span class="hstat-l">Win %</span>
+      </div>
+      <div class="hstat-sep"></div>
+      <div class="hstat">
+        <span class="hstat-n" data-t="2024">0</span>
+        <span class="hstat-l">Founded</span>
+      </div>
+    </div>
+
+    <div class="hero-btns" id="hBtns">
+      <a href="players.html" class="btn btn-primary btn-mag">Scout the Squad</a>
+      <a href="matches.html" class="btn btn-ghost btn-mag">View Matches</a>
+    </div>
+
+  </div>
+
+  <div class="hero-scroll" id="hScroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <span>DEMORA BASKETBALL</span><span class="tick-sep"></span>
+    <span>GRASSROOTS EXCELLENCE</span><span class="tick-sep"></span>
+    <span>TEAM FIRST</span><span class="tick-sep"></span>
+    <span>WHERE TALENT IS FORGED</span><span class="tick-sep"></span>
+    <span>DEMORA BASKETBALL</span><span class="tick-sep"></span>
+    <span>GRASSROOTS EXCELLENCE</span><span class="tick-sep"></span>
+    <span>TEAM FIRST</span><span class="tick-sep"></span>
+    <span>WHERE TALENT IS FORGED</span><span class="tick-sep"></span>
+  </div>
+</div>
+
+<!-- MATCH STRIP -->
+<div id="match-strip" class="reveal">
+  <div class="strip-inner">
+    <div class="strip-panel">
+      <span class="next-label">Next Match</span>
+      <p class="next-opp" id="stripOpp">Loading...</p>
+      <p class="next-detail" id="stripDetail">&nbsp;</p>
+    </div>
+    <div class="strip-div"></div>
+    <div class="strip-panel">
+      <div class="season-row">
+        <div class="srow-item">
+          <span class="srow-n g" id="stripWins">—</span>
+          <span class="srow-l">Wins</span>
+        </div>
+        <div class="srow-item">
+          <span class="srow-n r" id="stripLosses">—</span>
+          <span class="srow-l">Losses</span>
+        </div>
+        <div class="srow-item">
+          <span class="srow-n o" id="stripWinRate">—</span>
+          <span class="srow-l">Win Rate</span>
+        </div>
+        <div class="srow-item">
+          <span class="srow-n" style="color:var(--text)" id="stripMargin">—</span>
+          <span class="srow-l">Avg Margin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPLORE -->
+<section id="portals">
+  <div class="container">
+
+    <div class="section-head reveal">
+      <span class="tag">Explore</span>
+      <h2>THE FULL PICTURE</h2>
+      <p>Dive into the squad, results, gallery and the story behind Demora.</p>
+    </div>
+
+    <div class="portals-grid">
+
+      <a href="players.html" class="portal pcrd reveal">
+        <img src="team 1.jpg" alt="Squad" loading="lazy" />
+        <div class="portal-shade"></div>
+        <div class="portal-body">
+          <div>
+            <span class="portal-cat">Roster</span>
+            <span class="portal-name">THE SQUAD</span>
+          </div>
+          <div class="portal-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <a href="matches.html" class="portal reveal" data-d="1">
+        <img src="Demora.jpg" alt="Matches" loading="lazy" />
+        <div class="portal-shade"></div>
+        <div class="portal-body">
+          <div>
+            <span class="portal-cat">Schedule</span>
+            <span class="portal-name">MATCHES</span>
+          </div>
+          <div class="portal-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <a href="media.html" class="portal reveal" data-d="2">
+        <img src="team 3.jpg" alt="Media" loading="lazy" />
+        <div class="portal-shade"></div>
+        <div class="portal-body">
+          <div>
+            <span class="portal-cat">Gallery</span>
+            <span class="portal-name">MEDIA</span>
+          </div>
+          <div class="portal-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <a href="about.html" class="portal pcrd-full reveal" data-d="1">
+        <img src="Demora2.jpg" alt="About" loading="lazy" />
+        <div class="portal-shade"></div>
+        <div class="portal-body">
+          <div>
+            <span class="portal-cat">Our Story</span>
+            <span class="portal-name">ABOUT DEMORA</span>
+          </div>
+          <div class="portal-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot">
+    <div class="foot-top">
+      <a href="index.html" class="logo">
+        <span class="logo-o">D</span>EMORA
+        <span class="logo-sep"></span>
+        <span class="logo-sub">Basketball</span>
+      </a>
+      <p class="foot-tagline">Where talent is forged, not given.</p>
+    </div>
+    <div class="foot-bottom">
+      <p class="foot-copy">&copy; 2026 Demora Basketball. All rights reserved.</p>
+      <nav class="foot-links">
+        <a href="players.html">Squad</a>
+        <a href="matches.html">Matches</a>
+        <a href="media.html">Media</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="animations.js"></script>
+<script>
+async function loadStrip() {
+  if (!window.db) return;
+  const { data: matches } = await window.db
+    .from('matches').select('status,home_score,away_score,match_date,location,opponent').order('match_date');
+  if (!matches) return;
+
+  const next = matches.find(m => m.status === 'upcoming');
+  if (next) {
+    const d = new Date(next.match_date);
+    const dateStr = d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    const timeStr = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('stripOpp').textContent    = `vs ${next.opponent || 'TBA'}`;
+    document.getElementById('stripDetail').innerHTML   = `${dateStr} &nbsp;&middot;&nbsp; ${timeStr} &nbsp;&middot;&nbsp; ${next.location || 'TBA'}`;
+  } else {
+    document.getElementById('stripOpp').textContent  = 'No upcoming matches';
+    document.getElementById('stripDetail').textContent = '';
+  }
+
+  const played = matches.filter(m => m.status === 'completed' && m.home_score !== null);
+  const wins   = played.filter(m => m.home_score > m.away_score);
+  const losses = played.filter(m => m.home_score < m.away_score);
+  const winRate = played.length ? Math.round((wins.length / played.length) * 100) : 0;
+  const avgMargin = played.length
+    ? Math.round(played.reduce((s, m) => s + (m.home_score - m.away_score), 0) / played.length)
+    : 0;
+
+  document.getElementById('stripWins').textContent    = wins.length;
+  document.getElementById('stripLosses').textContent  = losses.length;
+  document.getElementById('stripWinRate').textContent = `${winRate}%`;
+  document.getElementById('stripMargin').textContent  = avgMargin >= 0 ? `+${avgMargin}` : String(avgMargin);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const pre  = document.getElementById('preloader');
+  const fill = document.getElementById('preFill');
+  const seen = sessionStorage.getItem('dm_seen');
+
+  function run(fn, ms) { return setTimeout(fn, ms); }
+  const $ = id => document.getElementById(id);
+
+  function showHero() {
+    // eyebrow + bar
+    run(() => $('hEyWrap')?.classList.add('in'), 60);
+
+    // heading lines, staggered mask reveal
+    ['hL1','hL2','hL3'].forEach((id, i) =>
+      run(() => $(id)?.classList.add('in'), 220 + i * 150)
+    );
+
+    // stat counters
+    run(() => {
+      $('hMeta')?.classList.add('in');
+      document.querySelectorAll('.hstat-n[data-t]').forEach(el => {
+        const target = +el.dataset.t;
+        const dur    = 1500;
+        const t0     = performance.now();
+        (function tick(now) {
+          const p = Math.min((now - t0) / dur, 1);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+      });
+    }, 640);
+
+    // buttons
+    run(() => $('hBtns')?.classList.add('in'), 820);
+
+    // scroll indicator
+    run(() => { const s = $('hScroll'); if (s) s.style.opacity = '1'; }, 1050);
+  }
+
+  loadStrip();
+
+  // magnetic buttons
+  document.querySelectorAll('.btn-mag').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      btn.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.2}px,${(e.clientY - r.top - r.height/2) * 0.24}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+
+  // preloader sequence
+  if (!seen) {
+    sessionStorage.setItem('dm_seen', '1');
+    fill.style.transition = 'width .9s cubic-bezier(0.19,1,0.22,1)';
+    fill.style.width = '100%';
+    run(() => {
+      pre.style.transition = 'transform .85s cubic-bezier(0.19,1,0.22,1)';
+      pre.style.transform  = 'translateY(-100%)';
+      run(() => { pre.remove(); showHero(); }, 880);
+    }, 1000);
+  } else {
+    pre.remove();
+    showHero();
+  }
+});
+</script>
+</body>
+</html>

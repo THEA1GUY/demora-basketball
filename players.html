@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Squad — Demora Basketball</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="c-dot"></div>
+  <div id="c-ring"></div>
+  <div id="pt"></div>
+  <nav id="nav">
+    <div class="nav-row">
+      <a href="index.html" class="logo"><span class="logo-o">D</span>EMORA<span class="logo-sep"></span><span
+          class="logo-sub">Basketball</span></a>
+      <ul class="nav-links">
+        <li><a href="players.html">Squad</a></li>
+        <li><a href="matches.html">Matches</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="ham" id="ham"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mob-menu" id="mob">
+      <a href="players.html">Squad</a><a href="matches.html">Matches</a>
+      <a href="media.html">Media</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+    </div>
+  </nav>
+  <header class="ph">
+    <div class="ph-img"><img src="team 1.jpg" alt="" /></div>
+    <div class="ph-overlay"></div>
+    <div class="ph-content container">
+      <span class="tag">Roster &middot; 2026</span>
+      <h1 class="title" id="pageH">THE SQUAD</h1>
+    </div>
+  </header>
+  <section id="squad-section">
+    <div class="container">
+      <div class="filter-bar">
+        <button class="fbtn active" data-f="all">All Players</button>
+        <button class="fbtn" data-f="PG">Point Guard</button>
+        <button class="fbtn" data-f="SG">Shooting Guard</button>
+        <button class="fbtn" data-f="SF">Small Forward</button>
+        <button class="fbtn" data-f="PF">Power Forward</button>
+        <button class="fbtn" data-f="C">Center</button>
+      </div>
+      <div class="squad-grid" id="grid">
+        <!-- Loading state -->
+        <div class="loading-state" id="players-loading">
+          <div class="loading-spinner"></div>
+          <p>Loading players...</p>
+        </div>
+        <!-- Error state -->
+        <div class="error-state" id="players-error" style="display: none;">
+          <div class="error-icon">⚠️</div>
+          <p>Failed to load players. Please try again later.</p>
+          <button class="retry-btn" onclick="fetchPlayers()">Retry</button>
+        </div>
+        <div class="sqcard tall reveal" data-p="0" data-pos="PG">
+          <img src="team 1.jpg" alt="Marcus Adeyemi" loading="lazy" />
+          <div class="sqcard-overlay">
+            <div><span class="sqcard-pos">PG</span><span class="sqcard-name">Marcus Adeyemi</span><span
+                class="sqcard-num">No. 3</span></div>
+            <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg></div>
+          </div>
+        </div>
+        <div class="sqcard reveal" data-d="1" data-p="1" data-pos="SG">
+          <img src="team 3.jpg" alt="Daniel Okonkwo" loading="lazy" />
+          <div class="sqcard-overlay">
+            <div><span class="sqcard-pos">SG</span><span class="sqcard-name">Daniel Okonkwo</span><span
+                class="sqcard-num">No. 12</span></div>
+            <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg></div>
+          </div>
+        </div>
+        <div class="sqcard wide reveal" data-d="2" data-p="2" data-pos="SF">
+          <img src="Demora2.jpg" alt="Emmanuel Chuka" loading="lazy" />
+          <div class="sqcard-overlay">
+            <div><span class="sqcard-pos">SF</span><span class="sqcard-name">Emmanuel Chuka</span><span
+                class="sqcard-num">No. 7</span></div>
+            <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg></div>
+          </div>
+        </div>
+        <div class="sqcard reveal" data-d="1" data-p="3" data-pos="PF">
+          <img src="team 4.jpg" alt="Femi Lawal" loading="lazy" />
+          <div class="sqcard-overlay">
+            <div><span class="sqcard-pos">PF</span><span class="sqcard-name">Femi Lawal</span><span
+                class="sqcard-num">No. 21</span></div>
+            <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg></div>
+          </div>
+        </div>
+        <div class="sqcard tall reveal" data-d="2" data-p="4" data-pos="C">
+          <img src="team 5.jpg" alt="Kola Benson" loading="lazy" />
+          <div class="sqcard-overlay">
+            <div><span class="sqcard-pos">C</span><span class="sqcard-name">Kola Benson</span><span
+                class="sqcard-num">No. 33</span></div>
+            <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg></div>
+          </div>
+        </div>
+        <div class="sqcard reveal" data-d="3" data-p="5" data-pos="PG">
+          <img src="team .jpg" alt="Tunde Ojo" loading="lazy" />
+          <div class="sqcard-overlay">
+            <div><span class="sqcard-pos">PG</span><span class="sqcard-name">Tunde Ojo</span><span
+                class="sqcard-num">No. 5</span></div>
+            <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="modal-bg" id="modal">
+    <div class="modal">
+      <button class="modal-x" id="modalX"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-grid">
+        <div class="modal-photo"><img id="mImg" src="" alt="" />
+          <div class="modal-badge"><span class="modal-pos" id="mPos"></span><span class="modal-num" id="mNum"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <h2 id="mName"></h2>
+          <div class="modal-stats">
+            <div class="mstat"><span class="mstat-v" id="mPPG">0</span><span class="mstat-l">PPG</span></div>
+            <div class="mstat"><span class="mstat-v" id="mAPG">0</span><span class="mstat-l">APG</span></div>
+            <div class="mstat"><span class="mstat-v" id="mRPG">0</span><span class="mstat-l">RPG</span></div>
+          </div>
+          <div class="modal-sec">
+            <h4>Playing Style</h4>
+            <p id="mStyle"></p>
+          </div>
+          <div class="modal-sec">
+            <h4>Profile</h4>
+            <p id="mBio"></p>
+          </div>
+          <div class="modal-sec">
+            <h4>Gallery</h4>
+            <div class="modal-gal" id="mGal"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="foot">
+      <div class="foot-top">
+        <a href="index.html" class="logo"><span class="logo-o">D</span>EMORA<span class="logo-sep"></span><span
+            class="logo-sub">Basketball</span></a>
+        <p class="foot-tagline">Where talent is forged, not given.</p>
+      </div>
+      <div class="foot-bottom">
+        <p class="foot-copy">&copy; 2026 Demora Basketball.</p>
+        <nav class="foot-links"><a href="matches.html">Matches</a><a href="media.html">Media</a><a
+            href="about.html">About</a><a href="contact.html">Contact</a></nav>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="storage.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="animations.js"></script>
+  <script>
+    // Fetch players from Supabase
+    let PL = [];
+
+    async function fetchPlayers() {
+      // Show loading state
+      const loadingEl = document.getElementById('players-loading');
+      const errorEl = document.getElementById('players-error');
+      const gridEl = document.getElementById('grid');
+
+      loadingEl.style.display = 'block';
+      errorEl.style.display = 'none';
+
+      try {
+        if (!window.db) {
+          throw new Error('Supabase client not initialized');
+        }
+
+        const { data, error } = await window.db
+          .from('players')
+          .select('*')
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        PL = data.map(player => ({
+          name: player.name,
+          pos: player.position,
+          num: player.jersey_number != null ? `No. ${player.jersey_number}` : '',
+          img: player.photo_url || 'team 1.jpg',
+          ppg: player.ppg || 0,
+          apg: player.apg || 0,
+          rpg: player.rpg || 0,
+          style: player.playing_style || '',
+          bio: player.bio || '',
+          gal: player.gallery_urls || []
+        }));
+
+        // Hide loading and show data
+        loadingEl.style.display = 'none';
+        initializePlayersUI();
+
+      } catch (err) {
+        console.error('Error in fetchPlayers:', err);
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        // Remove static hardcoded cards so they can't be clicked with empty PL[]
+        gridEl.querySelectorAll('.sqcard').forEach(c => c.remove());
+      }
+    }
+
+    function initializePlayersUI() {
+      // Clear existing cards
+      const grid = document.getElementById('grid');
+      if (!grid) return;
+
+      grid.innerHTML = '';
+
+      // Create player cards
+      const sizeMap = ['tall', '', 'wide', '', 'tall', ''];
+      PL.forEach((player, index) => {
+        const posAbbrev = player.pos;
+        const card = document.createElement('div');
+        const size = sizeMap[index % sizeMap.length];
+        card.className = ['sqcard', size, 'reveal'].filter(Boolean).join(' ');
+        card.dataset.p = index;
+        card.dataset.pos = posAbbrev;
+
+        card.innerHTML = `
+      <img src="${player.img}" alt="${player.name}" loading="lazy" />
+      <div class="sqcard-overlay">
+        <div><span class="sqcard-pos">${posAbbrev}</span><span class="sqcard-name">${player.name}</span><span class="sqcard-num">${player.num}</span></div>
+        <div class="sqcard-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    `;
+
+        grid.appendChild(card);
+        if (typeof observeReveal === 'function') observeReveal(card);
+      });
+
+      // Re-attach click event listeners
+      document.querySelectorAll('.sqcard').forEach(c => {
+        c.addEventListener('click', () => openP(+c.dataset.p));
+      });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchPlayers();
+
+      const h = document.getElementById('pageH');
+      if (h && typeof splitChars !== 'undefined' && typeof gsap !== 'undefined') {
+        const ch = splitChars(h);
+        gsap.set(ch, { y: '110%' });
+        gsap.to(ch, { y: '0%', stagger: 0.025, duration: 0.9, ease: 'expo.out', delay: 0.35 });
+      }
+    });
+    function cnt(el, t, d = 1100) { const isF = String(t).includes('.'); const t0 = performance.now(); (function u(n) { const p = Math.min((n - t0) / d, 1); el.textContent = isF ? (t * (1 - Math.pow(1 - p, 4))).toFixed(1) : Math.round(t * (1 - Math.pow(1 - p, 4))); if (p < 1) requestAnimationFrame(u); })(t0); }
+    document.querySelectorAll('.fbtn').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.fbtn').forEach(x => x.classList.remove('active')); b.classList.add('active'); const f = b.dataset.f; document.querySelectorAll('.sqcard').forEach(c => { c.style.display = (f === 'all' || c.dataset.pos === f) ? '' : 'none'; }); }));
+    const mo = document.getElementById('modal');
+    function openP(i) { const p = PL[i]; document.getElementById('mImg').src = p.img; document.getElementById('mImg').alt = p.name; document.getElementById('mPos').textContent = p.pos; document.getElementById('mNum').textContent = p.num; document.getElementById('mName').textContent = p.name; document.getElementById('mStyle').textContent = p.style; document.getElementById('mBio').textContent = p.bio; document.getElementById('mGal').innerHTML = p.gal.map(s => `<img src="${s}" alt="${p.name}" loading="lazy">`).join(''); const ppg = document.getElementById('mPPG'), apg = document.getElementById('mAPG'), rpg = document.getElementById('mRPG'); ppg.textContent = apg.textContent = rpg.textContent = '0'; mo.classList.add('open'); document.body.style.overflow = 'hidden'; setTimeout(() => { cnt(ppg, p.ppg); cnt(apg, p.apg); cnt(rpg, p.rpg); }, 200); }
+    function closeP() { mo.classList.remove('open'); document.body.style.overflow = ''; }
+    document.querySelectorAll('.sqcard').forEach(c => c.addEventListener('click', () => openP(+c.dataset.p)));
+    document.getElementById('modalX').addEventListener('click', closeP);
+    mo.addEventListener('click', e => { if (e.target === mo) closeP(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeP(); });
+  </script>
+</body>
+
+</html>
