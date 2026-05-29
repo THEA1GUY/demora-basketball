@@ -321,6 +321,8 @@ footer { background: var(--d1); border-top: 1px solid var(--border); }
   .hero-meta { gap: 22px; margin-bottom: 28px; }
   .hstat-n { font-size: 2rem; }
   .hero-content { padding: 0 20px 64px; }
+  #hero { min-height: 100svh; height: 100svh; }
+  .hbg img { object-position: center center; animation: none; transform: scale(1); }
 }
 
 /* ── MATCH STRIP ── */
